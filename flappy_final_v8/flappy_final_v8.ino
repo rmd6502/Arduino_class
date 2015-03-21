@@ -5,13 +5,9 @@
 #define BOX_OPEN 50
 #define BOX_CLOSE 150
 
-// Constant multiplier
-#define DEG_PER_MM (180.0/(21.0*3.14159))
-
-// Now in mm
 #define CHARACTER_BOTTOM 0
-#define CHARACTER_TOP (60.0*DEG_PER_MM)
-#define JUMP_DISTANCE (10.0*DEG_PER_MM)
+#define CHARACTER_TOP 160
+#define JUMP_DISTANCE 25
 
 // 
 static const uint32_t gracePeriod = 1000;
