@@ -2,7 +2,7 @@
 #include "flappy.h"
 #include "pitches.h"
 
-#define BOX_OPEN 40
+#define BOX_OPEN 50
 #define BOX_CLOSE 150
 
 // Constant multiplier
@@ -45,6 +45,8 @@ uint8_t jumpDurations[] = {
 
 void setup() 
 { 
+  myservoBird.attach(characterServoPin);
+  myservoBird.write(CHARACTER_BOTTOM);
   myservoGame.attach(lidServoPin);
   myservoGame.write(BOX_CLOSE); 
   delay(700);
@@ -144,7 +146,7 @@ void game_over(){
   myservoGame.attach(lidServoPin);
   myservoGame.write(BOX_CLOSE); //close game box
   delay(100);
-  birdup = (CHARACTER_BOTTOM + CHARACTER_TOP)/2;
+  birdup = CHARACTER_BOTTOM;
   released = true;
   delay(100);
   myservoBird.write(birdup);//bird go back to position 40
