@@ -2,8 +2,8 @@
 #include "flappy.h"
 #include "pitches.h"
 
-#define BOX_OPEN 90
-#define BOX_CLOSE 0
+#define BOX_OPEN 40
+#define BOX_CLOSE 150
 
 // Constant multiplier
 #define DEG_PER_MM (180.0/(21.0*3.14159))
@@ -47,8 +47,9 @@ void setup()
 { 
   myservoGame.attach(lidServoPin);
   myservoGame.write(BOX_CLOSE); 
-  delay(100);
+  delay(700);
   myservoGame.detach();
+  myservoBird.detach();
   
   pinMode(magnetPin, INPUT_PULLUP);  //reed
   pinMode(buttonPin, INPUT_PULLUP); //button 
@@ -72,12 +73,13 @@ void loop() {
   //start game 
   if (buttonState == LOW && in_game==false){
     Serial.println("Starting game");
+    myservoBird.attach(characterServoPin);
+    myservoGame.attach(lidServoPin);
     myservoGame.write(BOX_OPEN); //open box
     birdup=(CHARACTER_BOTTOM+CHARACTER_TOP)/2; //bird position
     delay (700);
     myservoRoll.attach(rollServoPin);
     myservoRoll.write(10); //roll background
-    myservoBird.attach(characterServoPin);
     in_game=true;
     released = false;
     digitalWrite(ledPin, HIGH);
@@ -114,6 +116,7 @@ void loop() {
       released = true;
     }
 
+    Serial.println(birdup);
     myservoBird.write(birdup);
     delay (50);
 
@@ -136,14 +139,15 @@ void loop() {
 void game_over(){
   //reset all the variables
   in_game =false;
-  birdup = (CHARACTER_BOTTOM + CHARACTER_TOP)/2;
-  released = true;
   myservoRoll.write(90); //stop roll background
   myservoRoll.detach();
+  myservoGame.attach(lidServoPin);
   myservoGame.write(BOX_CLOSE); //close game box
-  myservoGame.detach();
+  delay(100);
+  birdup = (CHARACTER_BOTTOM + CHARACTER_TOP)/2;
+  released = true;
+  delay(100);
   myservoBird.write(birdup);//bird go back to position 40
-  myservoBird.detach();
   digitalWrite(ledPin, LOW);
 //  digitalWrite(ledPin, HIGH);
   for (int thisNote = 0; thisNote < (sizeof(melody)/sizeof(melody[0])); thisNote++) {
@@ -152,6 +156,9 @@ void game_over(){
     int pauseBetweenNotes = noteDuration * 13 / 10;
     delay(pauseBetweenNotes);
   }
+  delay(550);
+  myservoGame.detach();
+  myservoBird.detach();
 }
 
 
